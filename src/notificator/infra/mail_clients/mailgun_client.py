@@ -61,8 +61,7 @@ class MailgunClient(NotificationClient[EmailAddress]):
             sender_display_name: Display name used in the From header.
             http_client: Optional preconfigured `httpx.AsyncClient`.
 
-        Raises
-        ------
+        Raises:
             MissingClientAuthError: Raised when neither `api_key` nor authenticated
                 `http_client` is provided.
             MalformedClientUrlError: Raised when `base_url` is not a valid URL.

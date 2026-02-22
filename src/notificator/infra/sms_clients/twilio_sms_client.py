@@ -39,7 +39,7 @@ _phone_number_adapter = TypeAdapter(E164NumberType)
 class TwilioSmsTemplate:
     """Template metadata for Twilio Content API usage.
 
-    Attributes
+    Attributes:
     ----------
         id: Twilio Content SID for the template or a friendly name if using registry anyway.
         version_registry: Optional mapping of friendly version names to Content SIDs.
@@ -74,8 +74,7 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
             messaging_service_sid: Optional messaging service SID.
             sender_phone_number: Optional sender phone number in E.164 format.
 
-        Raises
-        ------
+        Raises:
             TwilioMissingSenderIdError: Raised when neither sender phone number nor
                 messaging service SID is provided.
             InvalidPhoneNumberFormatError: Raised when `sender_phone_number` is invalid.

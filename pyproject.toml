@@ -14,7 +14,7 @@ requires-python = ">=3.13,<4.0"
 dependencies = [
     "httpx>=0.28.1",
     "phonenumbers>=9.0.24",
-    "pydantic>=2.12.5",
+    "pydantic[email]>=2.12.5",
     "pydantic-extra-types>=2.11.0",
     "twilio>=9.10.2",
 ]
@@ -109,8 +109,27 @@ skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["CPY", "FIX", "ARG001", "COM812", "D203", "D213", "E501", "PD008", "PD009", "RET504", "S101", "TD003"]
-unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
+ignore = [
+  "CPY",
+  "FIX",
+  "ARG001",
+  "COM812",
+  "D203",
+  "D213",
+  "E501",
+  "PD008",
+  "PD009",
+  "RET504",
+  "S101",
+  "TD003"
+]
+unfixable = [
+  "ERA001",
+  "F401",
+  "F841",
+  "T201",
+  "T203"
+]
 
 [tool.ruff.lint.flake8-annotations]
 allow-star-arg-any = true
@@ -125,7 +144,7 @@ split-on-trailing-comma = false
 max-doc-length = 100
 
 [tool.ruff.lint.pydocstyle]
-convention = "numpy"
+convention = "google"
 
 [tool.ty.environment]
 python-platform = "all"
