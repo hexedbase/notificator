@@ -11,6 +11,11 @@ class MalformedClientUrlError(MailNotificationError):
     """Exception raised when mail client base_url is malformed."""
 
     def __init__(self, base_url: str) -> None:
+        """Initialize the error with the invalid base URL.
+
+        Args:
+            base_url: The malformed base URL provided to the client.
+        """
         self.base_url = base_url
         super().__init__(f"{self.base_url} is not a valid url.")
 
@@ -19,6 +24,11 @@ class MalformedRecipientEmailError(MailNotificationError):
     """Exception raised when a recipient email is malformed."""
 
     def __init__(self, recipient: str) -> None:
+        """Initialize the error with the invalid recipient email.
+
+        Args:
+            recipient: The invalid email address provided to the client.
+        """
         self.recipient = recipient
         super().__init__(f"{self.recipient} is not a valid email address")
 
@@ -27,6 +37,7 @@ class MissingClientAuthError(MailNotificationError):
     """Exception raised when a mailclient authorization is missing."""
 
     def __init__(self) -> None:
+        """Initialize the error for missing Mailgun authentication."""
         super().__init__("You need to either provide an `api_key` or a configured httpx client.")
 
 
@@ -38,6 +49,7 @@ class EmailNotificationMissingSubjectError(MailNotificationError):
     """Exception raised when an email notification is missing a subject."""
 
     def __init__(self) -> None:
+        """Initialize the error for missing notification subject."""
         super().__init__(
             "You need to either provide a subject for email NotificationContent "
             "or set a default_subject for compatible clients."

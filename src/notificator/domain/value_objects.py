@@ -1,3 +1,5 @@
+"""Domain value objects used by notification clients."""
+
 from dataclasses import dataclass
 
 

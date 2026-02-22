@@ -1,3 +1,7 @@
+"""Twilio-backed SMS notification client implementation."""
+
+from __future__ import annotations
+
 import json
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Annotated, NewType
@@ -33,14 +37,24 @@ _phone_number_adapter = TypeAdapter(E164NumberType)
 
 @dataclass(frozen=True, slots=True)
 class TwilioSmsTemplate:
+    """Template metadata for Twilio Content API usage.
+
+    Attributes
+    ----------
+        id: Twilio Content SID for the template or a friendly name if using registry anyway.
+        version_registry: Optional mapping of friendly version names to Content SIDs.
+    """
+
     id: str
     version_registry: dict[str, str] = field(default_factory=dict)
 
 
 class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
+    """Send SMS notifications via Twilio's REST API."""
+
     __slots__ = ("_client", "_messaging_service_sid", "_sender_phone_number", "_templates")
 
-    def __init__( # noqa: PLR0913
+    def __init__(  # noqa: PLR0913
         self,
         account_sid: str,
         token: str,
@@ -50,6 +64,22 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
         messaging_service_sid: str | None = None,
         sender_phone_number: PhoneNumber | None = None,
     ) -> None:
+        """Initialize a Twilio-backed SMS notification client.
+
+        Args:
+            account_sid: Twilio account SID.
+            token: Twilio auth token.
+            templates: Optional list of template metadata for content-based messages.
+            twilio_http_client: Optional async HTTP client for Twilio.
+            messaging_service_sid: Optional messaging service SID.
+            sender_phone_number: Optional sender phone number in E.164 format.
+
+        Raises
+        ------
+            TwilioMissingSenderIdError: Raised when neither sender phone number nor
+                messaging service SID is provided.
+            InvalidPhoneNumberFormatError: Raised when `sender_phone_number` is invalid.
+        """
         if sender_phone_number is None and messaging_service_sid is None:
             raise TwilioMissingSenderIdError
 
@@ -77,10 +107,17 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
             raise InvalidPhoneNumberFormatError(phone_number) from e
 
     async def aclose(self) -> None:
+        """Close the underlying Twilio HTTP client if it is async-aware."""
         if isinstance(self._client.http_client, AsyncTwilioHttpClient):
             await self._client.http_client.close()
 
     async def notify(self, content: NotificationContent, *, recipient: PhoneNumber) -> None:
+        """Send a plain SMS message to a recipient.
+
+        Args:
+            content: Notification payload containing the message body.
+            recipient: E.164-compatible phone number to receive the SMS.
+        """
         e164_recipient = self._validate_phone_number(recipient)
 
         try:
@@ -96,6 +133,14 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
     async def notify_from_template(
         self, template: str, *, recipient: PhoneNumber, version: str | None = None, **variables: str
     ) -> None:
+        """Send a Twilio Content API template with injected variables.
+
+        Args:
+            template: Template identifier registered in Twilio.
+            recipient: E.164-compatible phone number to receive the SMS.
+            version: Optional template version alias or ID to resolve.
+            **variables: Template variables to inject into the message.
+        """
         e164_recipient = self._validate_phone_number(recipient)
         try:
             template_obj = self._template_registry[template]

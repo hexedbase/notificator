@@ -1,3 +1,5 @@
+"""Email provider integrations and related errors."""
+
 from notificator.infra.mail_clients.exceptions import (
     EmailNotificationMissingSubjectError,
     MailAPIError,

@@ -1,3 +1,5 @@
+"""SMS provider integrations and related errors."""
+
 from notificator.infra.sms_clients.exceptions import (
     InvalidPhoneNumberFormatError,
     SmsAPIError,
@@ -6,7 +8,7 @@ from notificator.infra.sms_clients.exceptions import (
     TemplateVersionNotAvailableError,
     TwilioMissingSenderIdError,
 )
-from notificator.infra.sms_clients.twilio_sms_client import TwilioSmsClient
+from notificator.infra.sms_clients.twilio_sms_client import TwilioSmsClient, TwilioSmsTemplate
 
 __all__ = [
     "InvalidPhoneNumberFormatError",
@@ -16,4 +18,5 @@ __all__ = [
     "TemplateVersionNotAvailableError",
     "TwilioMissingSenderIdError",
     "TwilioSmsClient",
+    "TwilioSmsTemplate",
 ]
