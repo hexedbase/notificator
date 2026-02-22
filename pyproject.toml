@@ -12,6 +12,11 @@ authors = [
 ]
 requires-python = ">=3.13,<4.0"
 dependencies = [
+    "httpx>=0.28.1",
+    "phonenumbers>=9.0.24",
+    "pydantic>=2.12.5",
+    "pydantic-extra-types>=2.11.0",
+    "twilio>=9.10.2",
 ]
 
 [project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
@@ -34,6 +39,7 @@ dev = [
   "mkdocstrings[python] (>=0.26.2)",
   "poethepoet (>=0.32.1)",
   "pre-commit (>=4.0.1)",
+        "mypy>=1.19.1",
   "pytest (>=8.3.4)",
   "pytest-mock (>=3.14.0)",
   "pytest-xdist (>=3.6.1)",
@@ -41,6 +47,23 @@ dev = [
   "ty (>=0.0.6)",
   "typeguard (>=4.4.1)",
 ]
+
+[tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
+files = ["src", "tests"]
+exclude = []
+strict = true
+disallow_subclassing_any = false
+disallow_untyped_decorators = false
+ignore_missing_imports = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+warn_unreachable = true
+plugins = [
+  "pydantic.mypy"
+]
+
 
 [tool.codespell]  # https://github.com/codespell-project/codespell
 builtin = "en-GB_to_en-US,clear,code,rare"
