@@ -3,14 +3,20 @@ name: Publish
 on:
   release:
     types:
-      - created
+      - published
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: pypi
+    environment: github-packages
     permissions:
-      id-token: write
+      contents: read
+      packages: write
+
+    env:
+      UV_PUBLISH_URL: https://pip.pkg.github.com/${{ github.repository_owner }}/
+      UV_PUBLISH_USERNAME: ${{ github.actor }}
+      UV_PUBLISH_PASSWORD: ${{ secrets.GITHUB_PACKAGES_TOKEN }}
 
     steps:
       - name: Checkout
