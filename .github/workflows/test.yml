@@ -9,6 +9,7 @@ on:
 
 jobs:
   test:
+    if: "${{ github.event_name != 'push' || !contains(github.event.head_commit.message, 'chore: update coverage badge') }}"
     runs-on: ubuntu-latest
 
     strategy:
@@ -21,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -44,3 +45,76 @@ jobs:
 
       - name: Test package
         run: devcontainer exec --workspace-folder . poe test
+
+      - name: Upload coverage artifact
+        if: matrix.resolution-strategy == 'highest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: reports/coverage.xml
+
+  coverage-badge:
+    needs: test
+    if: "${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'chore: update coverage badge') }}"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-xml
+          path: reports
+
+      - name: Generate coverage badge
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+          import xml.etree.ElementTree as ET
+
+          coverage_path = pathlib.Path("reports/coverage.xml")
+          root = ET.parse(coverage_path).getroot()
+          line_rate = float(root.attrib.get("line-rate", "0"))
+          percentage = round(line_rate * 100, 1)
+
+          if percentage >= 95:
+              color = "brightgreen"
+          elif percentage >= 90:
+              color = "green"
+          elif percentage >= 80:
+              color = "yellowgreen"
+          elif percentage >= 70:
+              color = "yellow"
+          elif percentage >= 60:
+              color = "orange"
+          else:
+              color = "red"
+
+          badge = {
+              "schemaVersion": 1,
+              "label": "coverage",
+              "message": f"{percentage}%",
+              "color": color,
+          }
+
+          badge_path = pathlib.Path(".github/badges/coverage.json")
+          badge_path.parent.mkdir(parents=True, exist_ok=True)
+          badge_path.write_text(json.dumps(badge), encoding="utf-8")
+          PY
+
+      - name: Commit coverage badge
+        run: |
+          if git diff --quiet -- .github/badges/coverage.json; then
+            echo "Coverage badge unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/badges/coverage.json
+          git commit -m "chore: update coverage badge"
+          git push

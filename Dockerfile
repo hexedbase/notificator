@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ghcr.io/astral-sh/uv:python3.14-trixie AS dev
+FROM ghcr.io/astral-sh/uv:python3.13-trixie AS dev
 
 # Create and activate a virtual environment [1].
 # [1] https://docs.astral.sh/uv/concepts/projects/config/#project-environment-path
