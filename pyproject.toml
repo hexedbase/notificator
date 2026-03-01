@@ -20,12 +20,12 @@ dependencies = [
 ]
 
 [project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
-homepage = "https://github.com/pyron-solutions/notificator"
-source = "https://github.com/pyron-solutions/notificator"
-changelog = "https://github.com/pyron-solutions/notificator/blob/main/CHANGELOG.md"
-releasenotes = "https://github.com/pyron-solutions/notificator/releases"
-documentation = "https://pyron-solutions.github.io/notificator"
-issues = "https://github.com/pyron-solutions/notificator/issues"
+homepage = "https://github.com/hexedbase/notificator"
+source = "https://github.com/hexedbase/notificator"
+changelog = "https://github.com/hexedbase/notificator/blob/main/CHANGELOG.md"
+releasenotes = "https://github.com/hexedbase/notificator/releases"
+documentation = "https://hexedbase.github.io/notificator"
+issues = "https://github.com/hexedbase/notificator/issues"
 
 [dependency-groups]  # https://docs.astral.sh/uv/concepts/projects/dependencies/#development-dependencies
 dev = [
@@ -95,6 +95,7 @@ select = ["ALL"]
 ignore = [
   "CPY",
   "FIX",
+  "A005",
   "ARG001",
   "COM812",
   "D203",
@@ -104,6 +105,7 @@ ignore = [
   "PD009",
   "RET504",
   "S101",
+  "TC004",
   "TD003"
 ]
 unfixable = [

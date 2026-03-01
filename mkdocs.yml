@@ -1,8 +1,8 @@
 site_name: Notificator
 site_description: Lightweight async email and SMS delivery for internal services.
-site_url: https://pyron-solutions.github.io/notificator
-repo_url: https://github.com/pyron-solutions/notificator
-repo_name: pyron-solutions/notificator
+site_url: https://hexedbase.github.io/notificator
+repo_url: https://github.com/hexedbase/notificator
+repo_name: hexedbase/notificator
 
 strict: true
 

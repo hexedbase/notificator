@@ -5,7 +5,7 @@ author_name: Bartosz Szaniecki
 project_description: A package for simplified push notification management.
 project_name: Notificator
 project_type: package
-project_url: https://github.com/pyron-solutions/notificator
+project_url: https://github.com/hexedbase/notificator
 python_version: '3.14'
 typing: strict
 with_conventional_commits: true

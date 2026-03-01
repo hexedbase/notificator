@@ -11,7 +11,7 @@ personal access token with the `read:packages` scope.
 
     ```sh
     uv pip install \
-      --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/pyron-solutions/" \
+      --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/" \
       notificator
     ```
 
@@ -19,7 +19,7 @@ personal access token with the `read:packages` scope.
 
     ```sh
     pip install \
-      --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/pyron-solutions/" \
+      --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/" \
       notificator
     ```
 
@@ -27,7 +27,7 @@ personal access token with the `read:packages` scope.
 
     ```sh
     pip config set global.extra-index-url \
-      "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/pyron-solutions/"
+      "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/"
     pip install notificator
     ```
 
