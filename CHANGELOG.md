@@ -1,4 +1,4 @@
-## v0.2.0 (2026-03-01)
+## v0.3.0 (2026-03-01)
 
 ### Feat
 
@@ -10,3 +10,7 @@
 - add dnspython and email-validator dependencies
 - implement mail and SMS notification clients
 - initialize "notificator" project structure
+
+### Refactor
+
+- simplify installation instructions and update package name
