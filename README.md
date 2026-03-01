@@ -15,35 +15,15 @@ email and SMS.
 
 ## Getting Started
 
-### Install From Private GitHub Registry
-
-1. Create a GitHub token with `read:packages`.
-2. Configure your Python package manager to use the private registry.
-
-`pip` (one-off install):
+### Install
 
 ```sh
-pip install \
-  --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/" \
-  notificator
+# uv
+uv add hexed-notificator
+
+# pip
+pip install hexed-notificator
 ```
-
-`pip` (persistent config):
-
-```sh
-pip config set global.extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/"
-pip install notificator
-```
-
-`uv`:
-
-```sh
-uv pip install \
-  --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/" \
-  notificator
-```
-
-Replace `<USERNAME>` and `<TOKEN>` with your credentials.
 
 ### Quickstart: Mailgun Email
 

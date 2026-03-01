@@ -4,34 +4,17 @@ Notificator requires **Python 3.13+**.
 
 ## Installation
 
-The package is distributed via a private GitHub Packages registry. You need a GitHub
-personal access token with the `read:packages` scope.
-
 === "uv"
 
     ```sh
-    uv pip install \
-      --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/" \
-      notificator
+    uv add hexed-notificator
     ```
 
-=== "pip (one-off)"
+=== "pip"
 
     ```sh
-    pip install \
-      --extra-index-url "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/" \
-      notificator
+    pip install hexed-notificator
     ```
-
-=== "pip (persistent)"
-
-    ```sh
-    pip config set global.extra-index-url \
-      "https://<USERNAME>:<TOKEN>@pip.pkg.github.com/hexedbase/"
-    pip install notificator
-    ```
-
-Replace `<USERNAME>` and `<TOKEN>` with your GitHub credentials.
 
 ## Send an email
 
