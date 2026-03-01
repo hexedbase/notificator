@@ -7,7 +7,7 @@ module-name = "notificator"
 
 [project]  # https://packaging.python.org/en/latest/specifications/pyproject-toml/
 name = "hexed-notificator"
-version = "0.3.0"
+version = "0.4.0"
 description = "A package for simplified push notification management."
 readme = "README.md"
 authors = [
