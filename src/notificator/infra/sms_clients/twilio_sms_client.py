@@ -52,7 +52,7 @@ class TwilioSmsTemplate:
 class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
     """Send SMS notifications via Twilio's REST API."""
 
-    __slots__ = ("_client", "_messaging_service_sid", "_sender_phone_number", "_templates")
+    __slots__ = ("_client", "_messaging_service_sid", "_sender_phone_number", "_template_registry")
 
     def __init__(  # noqa: PLR0913
         self,
@@ -70,7 +70,7 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
             account_sid: Twilio account SID.
             token: Twilio auth token.
             templates: Optional list of templates, either str representing sid or
-             TwilioSmsTemplate data objects, allowing custom versioning.
+                TwilioSmsTemplate data objects, allowing custom versioning.
             twilio_http_client: Optional async HTTP client for Twilio.
             messaging_service_sid: Optional messaging service SID.
             sender_phone_number: Optional sender phone number in E.164 format.
