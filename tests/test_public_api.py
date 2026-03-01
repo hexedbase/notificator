@@ -8,7 +8,14 @@ def test_domain_public_api_exports() -> None:
     module = importlib.import_module("notificator.domain")
 
     assert sorted(module.__all__) == sorted(
-        ["AsyncClosable", "NotificationClient", "NotificationContent", "NotificationError"]
+        [
+            "AsyncClosable",
+            "EmailAddress",
+            "NotificationClient",
+            "NotificationContent",
+            "NotificationError",
+            "PhoneNumber",
+        ]
     )
 
 
