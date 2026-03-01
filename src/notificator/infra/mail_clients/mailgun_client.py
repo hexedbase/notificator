@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, NewType
+from typing import TYPE_CHECKING
 
 import httpx
 from pydantic import AnyHttpUrl, EmailStr, TypeAdapter, ValidationError
 
-from notificator.domain import NotificationClient
+from notificator import AsyncClosable
+from notificator.domain import EmailAddress, NotificationClient
 from notificator.infra.mail_clients.exceptions import (
     EmailNotificationMissingSubjectError,
     MailAPIError,
@@ -20,13 +21,11 @@ from notificator.infra.mail_clients.exceptions import (
 if TYPE_CHECKING:
     from notificator.domain.value_objects import NotificationContent
 
-EmailAddress = NewType("EmailAddress", str)
-
 _email_adapter = TypeAdapter(EmailStr)
 _http_url_adapter = TypeAdapter(AnyHttpUrl)
 
 
-class MailgunClient(NotificationClient[EmailAddress]):
+class MailgunClient(NotificationClient[EmailAddress], AsyncClosable):
     """Send email notifications via the Mailgun HTTP API."""
 
     __slots__ = (

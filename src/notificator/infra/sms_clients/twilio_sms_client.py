@@ -4,17 +4,18 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Annotated, NewType
+from typing import TYPE_CHECKING, Annotated
 
 import phonenumbers
 from pydantic import TypeAdapter, ValidationError
+from pydantic_extra_types.phone_numbers import PhoneNumber as PydanticPhoneNumber
 from pydantic_extra_types.phone_numbers import PhoneNumberValidator
 from twilio.base import values
 from twilio.base.exceptions import TwilioException
 from twilio.http.async_http_client import AsyncTwilioHttpClient
 from twilio.rest import Client
 
-from notificator.domain import AsyncClosable, NotificationClient, NotificationContent
+from notificator.domain import AsyncClosable, NotificationClient, NotificationContent, PhoneNumber
 from notificator.infra.sms_clients.exceptions import (
     InvalidPhoneNumberFormatError,
     SmsAPIError,
@@ -26,13 +27,13 @@ from notificator.infra.sms_clients.exceptions import (
 if TYPE_CHECKING:
     from twilio.http import AsyncHttpClient
 
-PhoneNumber = NewType("PhoneNumber", str)
-
-E164NumberType = Annotated[
-    str, phonenumbers.PhoneNumber, PhoneNumberValidator(number_format="E164")
+# Twilio requires phone numbers to be in E164 format while pydantic.PhoneNumber defaults to RFC3966
+E164Number = Annotated[
+    str | phonenumbers.PhoneNumber | PydanticPhoneNumber | PhoneNumber,
+    PhoneNumberValidator(number_format="E164"),
 ]
 
-_phone_number_adapter = TypeAdapter(E164NumberType)
+_phone_number_adapter = TypeAdapter(E164Number)
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,7 +41,6 @@ class TwilioSmsTemplate:
     """Template metadata for Twilio Content API usage.
 
     Attributes:
-    ----------
         id: Twilio Content SID for the template or a friendly name if using registry anyway.
         version_registry: Optional mapping of friendly version names to Content SIDs.
     """
@@ -59,7 +59,7 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
         account_sid: str,
         token: str,
         *,
-        templates: list[TwilioSmsTemplate] | None = None,
+        templates: list[TwilioSmsTemplate | str] | None = None,
         twilio_http_client: AsyncHttpClient | None = None,
         messaging_service_sid: str | None = None,
         sender_phone_number: PhoneNumber | None = None,
@@ -69,7 +69,8 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
         Args:
             account_sid: Twilio account SID.
             token: Twilio auth token.
-            templates: Optional list of template metadata for content-based messages.
+            templates: Optional list of templates, either str representing sid or
+             TwilioSmsTemplate data objects, allowing custom versioning.
             twilio_http_client: Optional async HTTP client for Twilio.
             messaging_service_sid: Optional messaging service SID.
             sender_phone_number: Optional sender phone number in E.164 format.
@@ -79,6 +80,15 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
                 messaging service SID is provided.
             InvalidPhoneNumberFormatError: Raised when `sender_phone_number` is invalid.
         """
+        template_registry: dict[str, TwilioSmsTemplate] = {}
+
+        if templates is not None:
+            for t in templates:
+                if isinstance(t, str):
+                    template_registry[t] = TwilioSmsTemplate(id=t)
+                else:
+                    template_registry[t.id] = t
+
         if sender_phone_number is None and messaging_service_sid is None:
             raise TwilioMissingSenderIdError
 
@@ -97,7 +107,7 @@ class TwilioSmsClient(NotificationClient[PhoneNumber], AsyncClosable):
         )
         self._messaging_service_sid = messaging_service_sid
         self._sender_phone_number = e164_sender_phone_number
-        self._template_registry = {t.id: t for t in templates} if templates else {}
+        self._template_registry = template_registry
 
     def _validate_phone_number(self, phone_number: PhoneNumber) -> str:
         try:

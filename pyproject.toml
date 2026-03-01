@@ -39,29 +39,12 @@ dev = [
   "mkdocstrings[python] (>=0.26.2)",
   "poethepoet (>=0.32.1)",
   "pre-commit (>=4.0.1)",
-        "mypy>=1.19.1",
   "pytest (>=8.3.4)",
   "pytest-mock (>=3.14.0)",
   "pytest-xdist (>=3.6.1)",
   "ruff (>=0.9.2)",
   "ty (>=0.0.6)",
   "typeguard (>=4.4.1)",
-]
-
-[tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
-files = ["src", "tests"]
-exclude = []
-strict = true
-disallow_subclassing_any = false
-disallow_untyped_decorators = false
-ignore_missing_imports = true
-pretty = true
-show_column_numbers = true
-show_error_codes = true
-show_error_context = true
-warn_unreachable = true
-plugins = [
-  "pydantic.mypy"
 ]
 
 
